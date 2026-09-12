@@ -33,3 +33,41 @@ exports.createItem = async (req, res) => {
     res.status(400).json({ success: false, error: error.message });
   }
 };
+
+// @desc    Update an inventory item
+// @route   PUT /api/items/:id
+// @access  Public
+exports.updateItem = async (req, res) => {
+  try {
+    const item = await Item.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!item) {
+      return res.status(404).json({ success: false, error: 'Item not found' });
+    }
+
+    res.status(200).json({ success: true, data: item });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
+
+// @desc    Delete an inventory item
+// @route   DELETE /api/items/:id
+// @access  Public
+exports.deleteItem = async (req, res) => {
+  try {
+    const item = await Item.findByIdAndDelete(req.params.id);
+
+    if (!item) {
+      return res.status(404).json({ success: false, error: 'Item not found' });
+    }
+
+    res.status(200).json({ success: true, data: {} });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
+
